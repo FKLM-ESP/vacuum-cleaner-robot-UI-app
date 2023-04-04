@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 import '../comms/interface.dart';
 import '../widgets/custom_button.dart';
 
-class ControlButtons extends StatefulWidget {
-  const ControlButtons({Key? key}) : super(key: key);
+class ControlPanel extends StatefulWidget {
+  final Interface interface;
+
+  const ControlPanel({Key? key, required this.interface}) : super(key: key);
 
   @override
-  ControlButtonsState createState() => ControlButtonsState();
+  ControlPanelState createState() => ControlPanelState();
 }
 
-class ControlButtonsState extends State<ControlButtons> {
+class ControlPanelState extends State<ControlPanel> {
   bool isAutoMode = true;
   bool isFanOn = true;
 
   Future<void> _toggleMode(value) async {
     // Send command only when value changes
     if (value != isAutoMode) {
-      Interface.sendMode(value);
+      widget.interface.sendMode(value);
     }
     // store
     isAutoMode = value;
@@ -26,7 +28,7 @@ class ControlButtonsState extends State<ControlButtons> {
   Future<void> _toggleFan(value) async {
     // Send command only when value changes
     if (value != isFanOn) {
-      Interface.sendFan(value);
+      widget.interface.sendFan(value);
     }
     // store
     isFanOn = value;
@@ -42,20 +44,20 @@ class ControlButtonsState extends State<ControlButtons> {
         CustomButton(
             icon: "<",
             onTapDown: () {
-              Interface.sendMovement(Interface.left, true);
+              widget.interface.sendMovement(Interface.left, true);
             },
             onTapUp: () {
-              Interface.sendMovement(Interface.left, false);
+              widget.interface.sendMovement(Interface.left, false);
             }),
         Column(
           children: [
             CustomButton(
                 icon: "^",
                 onTapDown: () {
-                  Interface.sendMovement(Interface.forward, true);
+                  widget.interface.sendMovement(Interface.forward, true);
                 },
                 onTapUp: () {
-                  Interface.sendMovement(Interface.forward, false);
+                  widget.interface.sendMovement(Interface.forward, false);
                 }),
             const SizedBox(
               height: 10,
@@ -63,20 +65,20 @@ class ControlButtonsState extends State<ControlButtons> {
             CustomButton(
                 icon: "⌄",
                 onTapDown: () {
-                  Interface.sendMovement(Interface.backward, true);
+                  widget.interface.sendMovement(Interface.backward, true);
                 },
                 onTapUp: () {
-                  Interface.sendMovement(Interface.backward, false);
+                  widget.interface.sendMovement(Interface.backward, false);
                 }),
           ],
         ),
         CustomButton(
             icon: ">",
             onTapDown: () {
-              Interface.sendMovement(Interface.right, true);
+              widget.interface.sendMovement(Interface.right, true);
             },
             onTapUp: () {
-              Interface.sendMovement(Interface.right, false);
+              widget.interface.sendMovement(Interface.right, false);
             }),
         const SizedBox(
           width: 20,

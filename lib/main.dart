@@ -36,8 +36,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var interface = Interface();
     var mapWidget = MapView(
-      coords: Interface.getCoords(),
+      interface: interface,
+    );
+    var controlPanel = ControlPanel(
+      interface: interface,
     );
 
     return Scaffold(
@@ -56,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: mapWidget,
             ),
           ),
-          const ControlButtons(),
+          controlPanel,
           const SizedBox(
             height: 20,
           )

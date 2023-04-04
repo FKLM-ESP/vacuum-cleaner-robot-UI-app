@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:analyzer_plugin/utilities/pair.dart';
+import 'package:flutter/foundation.dart';
 
 class Interface {
   static const forward = 1;
@@ -6,31 +10,45 @@ class Interface {
   static const backward = 3;
   static const left = 4;
 
-  static List<Pair<double, double>> getCoords() {
-    return [
-      Pair(0, 0),
-      Pair(-100, 0),
-      Pair(-100, -100),
-      Pair(0, -100),
-      Pair(-50, -50),
-      Pair(-50, 0),
-      Pair(0, -50),
-      Pair(35, 35),
-    ];
+  late void Function() sendPointsToMap;
+
+  List<Pair<double, double>> points = [];
+
+  Timer? timer;
+
+  Interface() {
+    timer = Timer.periodic(const Duration(seconds: 5), (Timer t) async {
+      points = await getCoords();
+      sendPointsToMap();
+      if (kDebugMode) {
+        print("Updated points on map");
+      }
+    });
   }
 
-  static void sendMode(bool autoMode) {
-    print("Sent autoMode $autoMode");
+  Future<List<Pair<double, double>>> getCoords() async {
+    var rng = Random();
+    return List<Pair<double, double>>.generate(10, (i) => Pair(rng.nextDouble() * 50, rng.nextDouble() * 50));
+  }
+
+  void sendMode(bool autoMode) {
+    if (kDebugMode) {
+      print("Sent autoMode $autoMode");
+    }
     return;
   }
 
-  static void sendFan(bool fanMode) {
-    print("Sent fanMode $fanMode");
+  void sendFan(bool fanMode) {
+    if (kDebugMode) {
+      print("Sent fanMode $fanMode");
+    }
     return;
   }
 
-  static void sendMovement(int direction, bool start) {
-    print("Sent movement $direction $start");
+  void sendMovement(int direction, bool start) {
+    if (kDebugMode) {
+      print("Sent movement $direction $start");
+    }
     return;
   }
 }
