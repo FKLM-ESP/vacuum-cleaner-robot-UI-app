@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:app/view/control_buttons.dart';
 import 'package:app/view/map.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'comms/interface.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,15 +35,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  DateTime n = DateTime.now();
+  late Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Hacky, but refreshes the MapView widget
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) async {
+      setState(() {
+        n = DateTime.now();
+      });
+      if (kDebugMode) {
+        print("Refreshed main widget");
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var interface = Interface();
     var mapWidget = MapView(
-      interface: interface,
+      key: ObjectKey(n),
     );
-    var controlPanel = ControlPanel(
-      interface: interface,
-    );
+    var controlPanel = const ControlPanel();
 
     return Scaffold(
       appBar: AppBar(

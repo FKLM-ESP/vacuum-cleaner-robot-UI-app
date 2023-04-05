@@ -11,12 +11,17 @@ class Interface {
   static const left = 4;
 
   late void Function() sendPointsToMap;
-
   List<Pair<double, double>> points = [];
-
   Timer? timer;
 
-  Interface() {
+  static final Interface _instance = Interface._internal();
+
+  factory Interface() {
+    return _instance;
+  }
+
+  Interface._internal() {
+    // Remove and initialize sockets and listeners
     timer = Timer.periodic(const Duration(seconds: 5), (Timer t) async {
       points = await getCoords();
       sendPointsToMap();
@@ -28,7 +33,8 @@ class Interface {
 
   Future<List<Pair<double, double>>> getCoords() async {
     var rng = Random();
-    return List<Pair<double, double>>.generate(10, (i) => Pair(rng.nextDouble() * 50, rng.nextDouble() * 50));
+    return List<Pair<double, double>>.generate(
+        10, (i) => Pair(rng.nextDouble() * 50, rng.nextDouble() * 50));
   }
 
   void sendMode(bool autoMode) {

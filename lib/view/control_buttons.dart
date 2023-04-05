@@ -4,9 +4,7 @@ import '../comms/interface.dart';
 import '../widgets/custom_button.dart';
 
 class ControlPanel extends StatefulWidget {
-  final Interface interface;
-
-  const ControlPanel({Key? key, required this.interface}) : super(key: key);
+  const ControlPanel({Key? key}) : super(key: key);
 
   @override
   ControlPanelState createState() => ControlPanelState();
@@ -16,10 +14,12 @@ class ControlPanelState extends State<ControlPanel> {
   bool isAutoMode = true;
   bool isFanOn = true;
 
+  final Interface _interface = Interface();
+
   Future<void> _toggleMode(value) async {
     // Send command only when value changes
     if (value != isAutoMode) {
-      widget.interface.sendMode(value);
+      _interface.sendMode(value);
     }
     // store
     isAutoMode = value;
@@ -28,7 +28,7 @@ class ControlPanelState extends State<ControlPanel> {
   Future<void> _toggleFan(value) async {
     // Send command only when value changes
     if (value != isFanOn) {
-      widget.interface.sendFan(value);
+      _interface.sendFan(value);
     }
     // store
     isFanOn = value;
@@ -44,20 +44,20 @@ class ControlPanelState extends State<ControlPanel> {
         CustomButton(
             icon: "<",
             onTapDown: () {
-              widget.interface.sendMovement(Interface.left, true);
+              _interface.sendMovement(Interface.left, true);
             },
             onTapUp: () {
-              widget.interface.sendMovement(Interface.left, false);
+              _interface.sendMovement(Interface.left, false);
             }),
         Column(
           children: [
             CustomButton(
                 icon: "^",
                 onTapDown: () {
-                  widget.interface.sendMovement(Interface.forward, true);
+                  _interface.sendMovement(Interface.forward, true);
                 },
                 onTapUp: () {
-                  widget.interface.sendMovement(Interface.forward, false);
+                  _interface.sendMovement(Interface.forward, false);
                 }),
             const SizedBox(
               height: 10,
@@ -65,20 +65,20 @@ class ControlPanelState extends State<ControlPanel> {
             CustomButton(
                 icon: "⌄",
                 onTapDown: () {
-                  widget.interface.sendMovement(Interface.backward, true);
+                  _interface.sendMovement(Interface.backward, true);
                 },
                 onTapUp: () {
-                  widget.interface.sendMovement(Interface.backward, false);
+                  _interface.sendMovement(Interface.backward, false);
                 }),
           ],
         ),
         CustomButton(
             icon: ">",
             onTapDown: () {
-              widget.interface.sendMovement(Interface.right, true);
+              _interface.sendMovement(Interface.right, true);
             },
             onTapUp: () {
-              widget.interface.sendMovement(Interface.right, false);
+              _interface.sendMovement(Interface.right, false);
             }),
         const SizedBox(
           width: 20,

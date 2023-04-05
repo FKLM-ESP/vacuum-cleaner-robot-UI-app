@@ -58,8 +58,7 @@ class MyPainter extends CustomPainter {
 
     var newCords = points
         .map((e) =>
-        Offset((e.first + xOffset) / scale, (e.last + yOffset) / scale))
-    // Offset(e.first, e.last))
+            Offset((e.first + xOffset) / scale, (e.last + yOffset) / scale))
         .toList();
 
     var startPaint = Paint()..color = Colors.green;
@@ -72,7 +71,7 @@ class MyPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     canvas.drawPoints(pointMode, newCords, paint);
     newCords.forEachIndexed(
-          (element, index) {
+      (element, index) {
         if (index == 0) {
           canvas.drawCircle(newCords[0], 10, startPaint);
         } else if (index == newCords.length - 1) {

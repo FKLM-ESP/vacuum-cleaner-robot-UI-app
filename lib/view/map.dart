@@ -6,9 +6,7 @@ import '../comms/interface.dart';
 import '../utils/my_painter.dart';
 
 class MapView extends StatefulWidget {
-  final Interface interface;
-
-  const MapView({Key? key, required this.interface}) : super(key: key);
+  const MapView({Key? key}) : super(key: key);
 
   @override
   MapViewState createState() => MapViewState();
@@ -16,22 +14,22 @@ class MapView extends StatefulWidget {
 
 class MapViewState extends State<MapView> {
   late List<Pair<double, double>> _points;
+  final Interface _interface = Interface();
 
   @override
   initState() {
     super.initState();
-    _points = widget.interface.points;
+    _interface.sendPointsToMap = () => setState(() {
+          _points = _interface.points;
+          if (kDebugMode) {
+            print("Setting new state");
+          }
+        });
+    _points = _interface.points;
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.interface.sendPointsToMap = () => setState(() {
-          _points = widget.interface.points;
-          if (kDebugMode) {
-            print("setting new state");
-          }
-        });
-
     var myPainter = CustomPaint(
       painter: MyPainter(_points),
     );
