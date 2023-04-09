@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/view/battery_monitor.dart';
 import 'package:app/view/control_buttons.dart';
 import 'package:app/view/map.dart';
 import 'package:flutter/foundation.dart';
@@ -55,15 +56,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var mapWidget = MapView(
-      key: ObjectKey(n),
-    );
-    var controlPanel = const ControlPanel();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: BatteryMonitor(
+              key: ObjectKey(n),
+            ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -73,10 +77,12 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: mapWidget,
+              child: MapView(
+                key: ObjectKey(n),
+              ),
             ),
           ),
-          controlPanel,
+          const ControlPanel(),
           const SizedBox(
             height: 20,
           )

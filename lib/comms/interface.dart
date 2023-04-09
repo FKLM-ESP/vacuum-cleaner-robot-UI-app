@@ -12,6 +12,10 @@ class Interface {
 
   late void Function() sendPointsToMap;
   List<Pair<double, double>> points = [];
+
+  late void Function() sendBattery;
+  double batteryCharge = 0;
+
   Timer? timer;
 
   static final Interface _instance = Interface._internal();
@@ -25,6 +29,10 @@ class Interface {
     timer = Timer.periodic(const Duration(seconds: 5), (Timer t) async {
       points = await getCoords();
       sendPointsToMap();
+
+      batteryCharge = Random().nextDouble();
+      sendBattery();
+
       if (kDebugMode) {
         print("Updated points on map");
       }
