@@ -11,7 +11,7 @@ class BatteryMonitor extends StatefulWidget {
 }
 
 class BatteryMonitorState extends State<BatteryMonitor> {
-  late double _percentage;
+  late int _percentage;
   final Interface _interface = Interface();
 
   @override
@@ -30,10 +30,10 @@ class BatteryMonitorState extends State<BatteryMonitor> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text('${(_percentage * 100).toStringAsFixed(0)}% '),
+        Text('$_percentage% '),
         BatteryIndicator(
           batteryFromPhone: false,
-          batteryLevel: (_percentage * 100).toInt(),
+          batteryLevel: _percentage,
           style: BatteryIndicatorStyle.values[1],
           showPercentNum: false,
           showPercentSlide: true,

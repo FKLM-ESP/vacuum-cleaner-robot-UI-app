@@ -13,7 +13,7 @@ class MapView extends StatefulWidget {
 }
 
 class MapViewState extends State<MapView> {
-  late List<Pair<double, double>> _points;
+  late List<Pair<int, int>> _points;
   final Interface _interface = Interface();
 
   @override

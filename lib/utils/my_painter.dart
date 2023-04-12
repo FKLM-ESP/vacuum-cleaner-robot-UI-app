@@ -5,7 +5,7 @@ import 'package:dart_extensions_methods/dart_extension_methods.dart' as ext;
 import 'package:flutter/material.dart';
 
 class MyPainter extends CustomPainter {
-  List<Pair<double, double>> points;
+  List<Pair<int, int>> points;
 
   MyPainter(this.points);
 
@@ -15,7 +15,7 @@ class MyPainter extends CustomPainter {
       return;
     }
 
-    var minX = 0.0, maxX = 0.0, minY = 0.0, maxY = 0.0;
+    var minX = 0, maxX = 0, minY = 0, maxY = 0;
     for (var c in points) {
       if (c.first < minX) {
         minX = c.first;
@@ -41,20 +41,13 @@ class MyPainter extends CustomPainter {
 
     if (xScale > yScale) {
       scale = xScale;
-      xOffset = -minX;
+      xOffset = (-minX).toDouble();
       yOffset = -minY + (size.height * scale - deltaY) / 2;
     } else {
       scale = yScale;
       xOffset = -minX + (size.width * scale - deltaX) / 2;
-      yOffset = -minY;
+      yOffset = (-minY).toDouble();
     }
-
-    /*if (kDebugMode) {
-      print(
-          "minX: $minX\nmaxX: $maxX\nminY: $minY\nmaxY: $maxY\ndeltaX: $deltaX\ndeltaY: $deltaY\n");
-      print(
-          "xScale: $xScale\nyScale: $yScale\nxOffset: $xOffset\nyOffset: $yOffset\n");
-    }*/
 
     var newCords = points
         .map((e) =>
