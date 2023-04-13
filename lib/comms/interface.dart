@@ -36,11 +36,15 @@ class Interface {
         socket?.listen(handleMessage);
       }, onDone: () {
         socket = null;
+        batteryCharge = 0;
+        points = [];
         if (kDebugMode) {
           print("Connection closed by robot");
         }
       }, onError: (error) {
         socket = null;
+        batteryCharge = 0;
+        points = [];
         if (kDebugMode) {
           print("Connection closed by robot");
         }
