@@ -17,6 +17,9 @@ class Interface {
   late void Function() sendBattery;
   int batteryCharge = 0;
 
+  late void Function() sendImuValues;
+  List<double> imuValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
   Socket? socket;
 
   static final Interface _instance = Interface._internal();
@@ -38,6 +41,7 @@ class Interface {
         socket = null;
         batteryCharge = 0;
         points = [];
+        imuValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         if (kDebugMode) {
           print("Connection closed by robot");
         }
@@ -45,6 +49,7 @@ class Interface {
         socket = null;
         batteryCharge = 0;
         points = [];
+        imuValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
         if (kDebugMode) {
           print("Connection closed by robot");
         }
@@ -61,32 +66,64 @@ class Interface {
 
     int nBytesBattery = 1;
     int nBytesCoordinate = 4;
+    int nBytesImu = 4;
 
-    batteryCharge = message.buffer
-        .asByteData()
-        .getInt8(0); // change function when changing nBytesBattery
+    var msgByteData = message.buffer.asByteData();
 
-    sendBattery();
+    switch (String.fromCharCode(message[0])) {
+      case 'b':
+        {
+          if (message.lengthInBytes != 1 + nBytesBattery) {
+            return;
+          }
 
-    List<int> newPointsSingle = [];
+          // change conversion function when changing nBytesBattery
+          batteryCharge = msgByteData.getInt8(1);
+          sendBattery();
+        }
+        break;
 
-    for (int i = 0; i < message.length - 1; i += nBytesCoordinate) {
-      newPointsSingle.add(message.buffer.asByteData().getInt32(
-          nBytesBattery + i)); // change function when changing nBytesCoordinate
-    }
+      case 'i':
+        {
+          if (message.lengthInBytes != (1 + nBytesImu * 9)) {
+            return;
+          }
 
-    List<Pair<int, int>> newPointsPair = [];
+          List<double> newImuValues = [];
 
-    for (int i = 0; i < newPointsSingle.length; i += 2) {
-      newPointsPair.add(Pair(newPointsSingle[i], newPointsSingle[i + 1]));
-    }
+          for (int i = 1; i < message.length - 1; i += nBytesImu) {
+            // change conversion function when changing nBytesCoordinate
+            newImuValues.add(msgByteData.getFloat32(i));
+          }
 
-    points = newPointsPair;
+          imuValues = newImuValues;
+          sendImuValues();
+        }
+        break;
 
-    sendPointsToMap();
+      case 'c':
+        {
+          if ((message.lengthInBytes - 1) % (2 * nBytesCoordinate) != 0) {
+            return;
+          }
 
-    if (kDebugMode) {
-      print("Received message:\n$batteryCharge\n$points");
+          List<int> newPointsSingle = [];
+
+          for (int i = 1; i < message.length - 1; i += nBytesCoordinate) {
+            // change conversion function when changing nBytesCoordinate
+            newPointsSingle.add(msgByteData.getInt32(i));
+          }
+
+          List<Pair<int, int>> newPointsPair = [];
+
+          for (int i = 0; i < newPointsSingle.length; i += 2) {
+            newPointsPair.add(Pair(newPointsSingle[i], newPointsSingle[i + 1]));
+          }
+
+          points = newPointsPair;
+          sendPointsToMap();
+        }
+        break;
     }
   }
 

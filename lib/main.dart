@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:app/view/battery_monitor.dart';
 import 'package:app/view/control_buttons.dart';
+import 'package:app/view/imu_monitor.dart';
 import 'package:app/view/map.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -48,9 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         n = DateTime.now();
       });
-      if (kDebugMode) {
-        print("Refreshed main widget");
-      }
     });
   }
 
@@ -80,6 +77,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: MapView(
                 key: ObjectKey(n),
               ),
+            ),
+          ),
+          SizedBox(
+            height: 80,
+            child: ImuMonitor(
+              key: ObjectKey(n),
             ),
           ),
           const ControlPanel(),
