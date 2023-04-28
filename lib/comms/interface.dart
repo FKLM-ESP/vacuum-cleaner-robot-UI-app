@@ -147,4 +147,11 @@ class Interface {
     }
     socket?.write("move $direction $start");
   }
+
+  void sendTestRoutine() {
+    if (kDebugMode) {
+      print("Initiated test routine");
+    }
+    socket?.write("test");
+  }
 }

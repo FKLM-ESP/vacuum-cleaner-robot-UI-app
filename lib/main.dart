@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app/comms/interface.dart';
 import 'package:app/view/battery_monitor.dart';
 import 'package:app/view/control_buttons.dart';
 import 'package:app/view/imu_monitor.dart';
@@ -86,6 +87,26 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           const ControlPanel(),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: ElevatedButton(
+              onPressed: Interface().sendTestRoutine,
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateColor.resolveWith(
+                (states) => Colors.lightBlue,
+              )),
+              child: const Text(
+                "Test",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
           const SizedBox(
             height: 20,
           )
