@@ -8,6 +8,18 @@ import sys
 HOST = "192.168.0.200"  # The server's hostname or IP address
 PORT = 9000  # The port used by the server
 
+points_const = [
+    4, 6,
+    10, 10,
+    0, 12,
+    4, 0,
+    2, 16,
+    10, 4,
+    0, 2,
+    9, 16,
+    5, 14
+]
+
 def print_payload(s):
     while True:
         try:
@@ -35,7 +47,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.send(b'b' + batteryBytes)
             time.sleep(1)
 
-            points = random.sample(range(-100, 100), 10)
+            points = points_const  # random.sample(range(-100, 100), 10)
             pointBytes = b''.join([n.to_bytes(4, byteorder='big', signed=True) for n in points])
 
             print("coordinates \t" + str(points))

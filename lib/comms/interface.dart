@@ -114,15 +114,18 @@ class Interface {
             newPointsSingle.add(msgByteData.getInt32(i));
           }
 
-          List<Pair<int, int>> newPointsPair = [];
+          List<Pair<int, int>> newPointsPairs = [];
 
           for (int i = 0; i < newPointsSingle.length; i += 2) {
-            newPointsPair.add(Pair(newPointsSingle[i], newPointsSingle[i + 1]));
+            newPointsPairs
+                .add(Pair(newPointsSingle[i], -newPointsSingle[i + 1]));
           }
 
-          points = newPointsPair;
+          points = newPointsPairs;
+
           sendPointsToMap();
         }
+
         break;
     }
   }
