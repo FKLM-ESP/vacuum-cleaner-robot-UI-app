@@ -4,6 +4,7 @@ import 'package:app/comms/interface.dart';
 import 'package:app/view/battery_monitor.dart';
 import 'package:app/view/control_buttons.dart';
 import 'package:app/view/imu_monitor.dart';
+import 'package:app/view/log_view.dart';
 import 'package:app/view/map.dart';
 import 'package:flutter/material.dart';
 
@@ -37,8 +38,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DateTime n = DateTime.now();
+  // explicit, private methods not accessible in initializers
+  ObjectKey n = ObjectKey(DateTime.now());
   late Timer timer;
+
+  ObjectKey _genObjectKey() {
+    return ObjectKey(DateTime.now());
+  }
 
   @override
   void initState() {
@@ -47,9 +53,19 @@ class _MyHomePageState extends State<MyHomePage> {
     // Hacky, but refreshes the MapView widget
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) async {
       setState(() {
-        n = DateTime.now();
+        n = _genObjectKey();
       });
     });
+  }
+
+  final _controller = PageController(
+    initialPage: 0,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,12 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: BatteryMonitor(
-              key: ObjectKey(n),
-            ),
+            padding: EdgeInsets.all(8.0),
+            child: BatteryMonitor(),
           ),
         ],
       ),
@@ -74,17 +88,22 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: MapView(
-                key: ObjectKey(n),
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: PageView(
+                controller: _controller,
+                children: [
+                  MapView(
+                    // force the map to be redrawn
+                    key: n,
+                  ),
+                  const LogView()
+                ],
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 80,
-            child: ImuMonitor(
-              key: ObjectKey(n),
-            ),
+            child: ImuMonitor(),
           ),
           const ControlPanel(),
           const SizedBox(

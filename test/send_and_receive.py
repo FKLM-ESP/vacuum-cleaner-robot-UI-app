@@ -47,7 +47,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.send(b'b' + batteryBytes)
             time.sleep(1)
 
-            points = points_const  # random.sample(range(-100, 100), 10)
+            points = random.sample(range(-100, 100), 10)
             pointBytes = b''.join([n.to_bytes(4, byteorder='big', signed=True) for n in points])
 
             print("coordinates \t" + str(points))

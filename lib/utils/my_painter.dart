@@ -31,8 +31,8 @@ class MyPainter extends CustomPainter {
       }
     }
 
-    var deltaX = maxX - minX;
-    var deltaY = maxY - minY;
+    var deltaX = (maxX - minX) * 1.1;
+    var deltaY = (maxY - minY) * 1.1;
 
     var xScale = deltaX / size.width;
     var yScale = deltaY / size.height;
@@ -41,12 +41,12 @@ class MyPainter extends CustomPainter {
 
     if (xScale > yScale) {
       scale = xScale;
-      xOffset = (-minX).toDouble();
-      yOffset = -minY + (size.height * scale - deltaY) / 2;
+      xOffset = (-minX + 8).toDouble();
+      yOffset = -minY + 8 + (size.height * scale - deltaY) / 2;
     } else {
       scale = yScale;
-      xOffset = -minX + (size.width * scale - deltaX) / 2;
-      yOffset = (-minY).toDouble();
+      xOffset = -minX + 8 + (size.width * scale - deltaX) / 2;
+      yOffset = (-minY + 8).toDouble();
     }
 
     var newCords = points

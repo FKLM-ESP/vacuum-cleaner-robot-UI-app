@@ -16,14 +16,17 @@ class ImuMonitorState extends State<ImuMonitor> {
   @override
   void initState() {
     super.initState();
-    _interface.sendImuValues = () => setState(() {
-          _values = _interface.imuValues;
-          if (kDebugMode) {
-            print("Setting new IMU values");
-          }
-        });
+
+    _interface.sendImuValues = () {
+      setState(() {
+        _values = _interface.imuValues;
+      });
+      if (kDebugMode) {
+        print("Setting new IMU values");
+      }
+    };
+
     _values = _interface.imuValues;
-    // _values = [25.0, 2.0, 150.0, 4.0, 63.0, 6.0, 7.0, 1000.0, 9.0];
   }
 
   @override
@@ -35,10 +38,11 @@ class ImuMonitorState extends State<ImuMonitor> {
         Row(
           children: [
             const Expanded(
-                child: Text(
-              "Mag:",
-              textAlign: TextAlign.center,
-            )),
+              child: Text(
+                "Mag:",
+                textAlign: TextAlign.center,
+              ),
+            ),
             Expanded(
               flex: 2,
               child: Text(
@@ -65,10 +69,11 @@ class ImuMonitorState extends State<ImuMonitor> {
         Row(
           children: [
             const Expanded(
-                child: Text(
-              "Gyr:",
-              textAlign: TextAlign.center,
-            )),
+              child: Text(
+                "Gyr:",
+                textAlign: TextAlign.center,
+              ),
+            ),
             Expanded(
               flex: 2,
               child: Text(
@@ -95,10 +100,11 @@ class ImuMonitorState extends State<ImuMonitor> {
         Row(
           children: [
             const Expanded(
-                child: Text(
-              "Acc:",
-              textAlign: TextAlign.center,
-            )),
+              child: Text(
+                "Acc:",
+                textAlign: TextAlign.center,
+              ),
+            ),
             Expanded(
               flex: 2,
               child: Text(

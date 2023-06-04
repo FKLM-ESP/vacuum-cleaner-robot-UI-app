@@ -12,28 +12,36 @@ class MapView extends StatefulWidget {
   MapViewState createState() => MapViewState();
 }
 
-class MapViewState extends State<MapView> {
+class MapViewState extends State<MapView> with AutomaticKeepAliveClientMixin {
   late List<Pair<int, int>> _points;
   final Interface _interface = Interface();
 
   @override
   initState() {
     super.initState();
-    _interface.sendPointsToMap = () => setState(() {
-          _points = _interface.points;
-          if (kDebugMode) {
-            print("Setting new state");
-          }
-        });
+
+    _interface.sendPointsToMap = () {
+      setState(() {
+        _points = _interface.points;
+      });
+      if (kDebugMode) {
+        print("Setting new map");
+      }
+    };
+
     _points = _interface.points;
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var myPainter = CustomPaint(
       painter: MyPainter(_points),
     );
 
     return myPainter;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

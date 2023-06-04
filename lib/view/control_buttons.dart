@@ -42,44 +42,48 @@ class ControlPanelState extends State<ControlPanel> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomButton(
-            icon: "<",
-            onTapDown: () {
-              _interface.sendMovement(Interface.left, true);
-            },
-            onTapUp: () {
-              _interface.sendMovement(Interface.left, false);
-            }),
+          icon: "<",
+          onTapDown: () {
+            _interface.sendMovement(Interface.left, true);
+          },
+          onTapUp: () {
+            _interface.sendMovement(Interface.left, false);
+          },
+        ),
         Column(
           children: [
             CustomButton(
-                icon: "^",
-                onTapDown: () {
-                  _interface.sendMovement(Interface.forward, true);
-                },
-                onTapUp: () {
-                  _interface.sendMovement(Interface.forward, false);
-                }),
+              icon: "^",
+              onTapDown: () {
+                _interface.sendMovement(Interface.forward, true);
+              },
+              onTapUp: () {
+                _interface.sendMovement(Interface.forward, false);
+              },
+            ),
             const SizedBox(
               height: 10,
             ),
             CustomButton(
-                icon: "⌄",
-                onTapDown: () {
-                  _interface.sendMovement(Interface.backward, true);
-                },
-                onTapUp: () {
-                  _interface.sendMovement(Interface.backward, false);
-                }),
+              icon: "⌄",
+              onTapDown: () {
+                _interface.sendMovement(Interface.backward, true);
+              },
+              onTapUp: () {
+                _interface.sendMovement(Interface.backward, false);
+              },
+            ),
           ],
         ),
         CustomButton(
-            icon: ">",
-            onTapDown: () {
-              _interface.sendMovement(Interface.right, true);
-            },
-            onTapUp: () {
-              _interface.sendMovement(Interface.right, false);
-            }),
+          icon: ">",
+          onTapDown: () {
+            _interface.sendMovement(Interface.right, true);
+          },
+          onTapUp: () {
+            _interface.sendMovement(Interface.right, false);
+          },
+        ),
         const SizedBox(
           width: 20,
         ),

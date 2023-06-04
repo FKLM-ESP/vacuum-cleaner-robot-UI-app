@@ -17,12 +17,16 @@ class BatteryMonitorState extends State<BatteryMonitor> {
   @override
   void initState() {
     super.initState();
-    _interface.sendBattery = () => setState(() {
-          _percentage = _interface.batteryCharge;
-          if (kDebugMode) {
-            print("Setting new battery charge");
-          }
-        });
+
+    _interface.sendBattery = () {
+      setState(() {
+        _percentage = _interface.batteryCharge;
+      });
+      if (kDebugMode) {
+        print("Setting new battery charge");
+      }
+    };
+
     _percentage = _interface.batteryCharge;
   }
 

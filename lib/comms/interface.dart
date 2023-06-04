@@ -11,14 +11,17 @@ class Interface {
 
   static const port = 9000;
 
-  late void Function() sendPointsToMap;
+  void Function() sendPointsToMap = () {};
   List<Pair<int, int>> points = [];
 
-  late void Function() sendBattery;
+  void Function() sendBattery = () {};
   int batteryCharge = 0;
 
-  late void Function() sendImuValues;
+  void Function() sendImuValues = () {};
   List<double> imuValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  void Function() sendlogStrings = () {};
+  List<String> logStrings = [];
 
   Socket? socket;
 
@@ -69,6 +72,10 @@ class Interface {
     int nBytesImu = 4;
 
     var msgByteData = message.buffer.asByteData();
+
+    logStrings
+        .add("${DateTime.now().toLocal()}: ${String.fromCharCodes(message)}");
+    sendlogStrings();
 
     switch (String.fromCharCode(message[0])) {
       case 'b':
