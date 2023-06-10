@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app/comms/interface.dart';
+import 'package:app/utils/app_scroll_behavior.dart';
 import 'package:app/view/battery_monitor.dart';
 import 'package:app/view/control_buttons.dart';
 import 'package:app/view/imu_monitor.dart';
@@ -90,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: PageView(
+                scrollBehavior: AppScrollBehavior(),
                 controller: _controller,
                 children: [
                   MapView(
