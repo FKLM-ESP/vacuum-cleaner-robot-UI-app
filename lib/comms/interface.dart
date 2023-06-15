@@ -4,10 +4,16 @@ import 'package:analyzer_plugin/utilities/pair.dart';
 import 'package:flutter/foundation.dart';
 
 class Interface {
-  static const forward = 1;
-  static const right = 2;
-  static const backward = 3;
-  static const left = 4;
+  static const stateStop = 0x00; // 0000 0000
+  static const stateForward = 0x01; // 0000 0001
+  static const stateBackward = 0x02; // 0000 0010
+  static const stateLeft = 0x04; // 0000 0100
+  static const stateRight = 0x08; // 0000 1000
+  static const autoOn = 0x30; // 0011 0000
+  static const autoOff = 0x20; // 0010 0000
+  static const fanOn = 0xC0; // 1100 0000
+  static const fanOff = 0x80; // 1000 0000
+  static const testMode = 0xFF; // 1111 1111
 
   static const port = 9000;
 
@@ -96,6 +102,10 @@ class Interface {
             return;
           }
 
+          if (kDebugMode) {
+            print(message);
+          }
+
           List<double> newImuValues = [];
 
           for (int i = 1; i < message.length - 1; i += nBytesImu) {
@@ -105,6 +115,10 @@ class Interface {
 
           imuValues = newImuValues;
           sendImuValues();
+
+          if (kDebugMode) {
+            print(imuValues);
+          }
         }
         break;
 
@@ -112,6 +126,9 @@ class Interface {
         {
           if ((message.lengthInBytes - 1) % (2 * nBytesCoordinate) != 0) {
             return;
+          }
+          if (kDebugMode) {
+            print(message);
           }
 
           List<int> newPointsSingle = [];
@@ -138,30 +155,61 @@ class Interface {
   }
 
   void sendMode(bool autoMode) {
+    var message = Uint8List(1);
+    var bytedata = ByteData.view(message.buffer);
+
+    if (autoMode) {
+      bytedata.setUint8(0, autoOn);
+    } else {
+      bytedata.setUint8(0, autoOff);
+    }
+
     if (kDebugMode) {
       print("Sent autoMode $autoMode");
     }
-    socket?.write("auto $autoMode");
+    socket?.add(message);
   }
 
   void sendFan(bool fanMode) {
+    var message = Uint8List(1);
+    var bytedata = ByteData.view(message.buffer);
+
+    if (fanMode) {
+      bytedata.setUint8(0, fanOn);
+    } else {
+      bytedata.setUint8(0, fanOff);
+    }
+
     if (kDebugMode) {
       print("Sent fanMode $fanMode");
     }
-    socket?.write("fan $fanMode");
+    socket?.add(message);
   }
 
   void sendMovement(int direction, bool start) {
+    var message = Uint8List(1);
+    var bytedata = ByteData.view(message.buffer);
+
+    if (!start) {
+      bytedata.setUint8(0, stateStop);
+    } else {
+      bytedata.setUint8(0, direction);
+    }
     if (kDebugMode) {
       print("Sent movement $direction $start");
     }
-    socket?.write("move $direction $start");
+    socket?.add(message);
   }
 
   void sendTestRoutine() {
+    var message = Uint8List(1);
+    var bytedata = ByteData.view(message.buffer);
+
+    bytedata.setUint8(0, testMode);
+
     if (kDebugMode) {
       print("Initiated test routine");
     }
-    socket?.write("test");
+    socket?.add(message);
   }
 }

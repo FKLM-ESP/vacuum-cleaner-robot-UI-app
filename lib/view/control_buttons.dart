@@ -44,10 +44,10 @@ class ControlPanelState extends State<ControlPanel> {
         CustomButton(
           icon: "<",
           onTapDown: () {
-            _interface.sendMovement(Interface.left, true);
+            _interface.sendMovement(Interface.stateLeft, true);
           },
           onTapUp: () {
-            _interface.sendMovement(Interface.left, false);
+            _interface.sendMovement(Interface.stateLeft, false);
           },
         ),
         Column(
@@ -55,10 +55,10 @@ class ControlPanelState extends State<ControlPanel> {
             CustomButton(
               icon: "^",
               onTapDown: () {
-                _interface.sendMovement(Interface.forward, true);
+                _interface.sendMovement(Interface.stateForward, true);
               },
               onTapUp: () {
-                _interface.sendMovement(Interface.forward, false);
+                _interface.sendMovement(Interface.stateForward, false);
               },
             ),
             const SizedBox(
@@ -67,10 +67,10 @@ class ControlPanelState extends State<ControlPanel> {
             CustomButton(
               icon: "⌄",
               onTapDown: () {
-                _interface.sendMovement(Interface.backward, true);
+                _interface.sendMovement(Interface.stateBackward, true);
               },
               onTapUp: () {
-                _interface.sendMovement(Interface.backward, false);
+                _interface.sendMovement(Interface.stateBackward, false);
               },
             ),
           ],
@@ -78,10 +78,10 @@ class ControlPanelState extends State<ControlPanel> {
         CustomButton(
           icon: ">",
           onTapDown: () {
-            _interface.sendMovement(Interface.right, true);
+            _interface.sendMovement(Interface.stateRight, true);
           },
           onTapUp: () {
-            _interface.sendMovement(Interface.right, false);
+            _interface.sendMovement(Interface.stateRight, false);
           },
         ),
         const SizedBox(

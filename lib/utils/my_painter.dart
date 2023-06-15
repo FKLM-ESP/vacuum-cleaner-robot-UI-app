@@ -34,24 +34,24 @@ class MyPainter extends CustomPainter {
     var deltaX = (maxX - minX) * 1.1;
     var deltaY = (maxY - minY) * 1.1;
 
+    var allPositiveCoords = points
+        .map((e) =>
+            Pair<double, double>((e.first - minX) / 1.0, (e.last - minY) / 1.0))
+        .toList();
+
     var xScale = deltaX / size.width;
     var yScale = deltaY / size.height;
 
-    double scale, xOffset, yOffset;
+    double scale;
 
     if (xScale > yScale) {
       scale = xScale;
-      xOffset = (-minX + 8).toDouble();
-      yOffset = -minY + 8 + (size.height * scale - deltaY) / 2;
     } else {
       scale = yScale;
-      xOffset = -minX + 8 + (size.width * scale - deltaX) / 2;
-      yOffset = (-minY + 8).toDouble();
     }
 
-    var newCords = points
-        .map((e) =>
-            Offset((e.first + xOffset) / scale, (e.last + yOffset) / scale))
+    var newCoords = allPositiveCoords
+        .map((e) => Offset(e.first / scale + 10, e.last / scale + 10))
         .toList();
 
     var startPaint = Paint()..color = Colors.green;
@@ -62,15 +62,15 @@ class MyPainter extends CustomPainter {
       ..color = Colors.black
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round;
-    canvas.drawPoints(pointMode, newCords, paint);
-    newCords.forEachIndexed(
+    canvas.drawPoints(pointMode, newCoords, paint);
+    newCoords.forEachIndexed(
       (element, index) {
         if (index == 0) {
-          canvas.drawCircle(newCords[0], 10, startPaint);
-        } else if (index == newCords.length - 1) {
-          canvas.drawCircle(newCords[index], 10, posPaint);
+          canvas.drawCircle(newCoords[0], 10, startPaint);
+        } else if (index == newCoords.length - 1) {
+          canvas.drawCircle(newCoords[index], 10, posPaint);
         } else {
-          canvas.drawCircle(newCords[index], 10, hitPaint);
+          canvas.drawCircle(newCoords[index], 10, hitPaint);
         }
       },
     );
