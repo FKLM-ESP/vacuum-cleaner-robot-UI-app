@@ -110,7 +110,7 @@ class Interface {
 
           for (int i = 1; i < message.length - 1; i += nBytesImu) {
             // change conversion function when changing nBytesCoordinate
-            newImuValues.add(msgByteData.getFloat32(i));
+            newImuValues.add((msgByteData.getInt32(i)) / 10000);
           }
 
           imuValues = newImuValues;
