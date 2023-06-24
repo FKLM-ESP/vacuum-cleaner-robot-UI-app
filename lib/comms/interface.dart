@@ -79,10 +79,6 @@ class Interface {
 
     var msgByteData = message.buffer.asByteData();
 
-    logStrings
-        .add("${DateTime.now().toLocal()}: ${String.fromCharCodes(message)}");
-    sendlogStrings();
-
     switch (String.fromCharCode(message[0])) {
       case 'b':
         {
@@ -149,6 +145,16 @@ class Interface {
 
           sendPointsToMap();
         }
+
+        break;
+
+      case 'l':
+        var timeString =
+            DateTime.now().toIso8601String().split("T")[1].split(".")[0];
+        logStrings
+            .add("$timeString - ${String.fromCharCodes(message).substring(1)}");
+
+        sendlogStrings();
 
         break;
     }
