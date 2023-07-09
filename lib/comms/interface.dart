@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:analyzer_plugin/utilities/pair.dart';
@@ -29,44 +30,87 @@ class Interface {
   void Function() sendlogStrings = () {};
   List<String> logStrings = [];
 
+  void Function() sendConnectionStatus = () {};
+  bool isConnected = false;
+
   Socket? socket;
 
+  late DateTime lastMsgTime;
+
   static final Interface _instance = Interface._internal();
+
+  late Timer connectionTimer;
 
   factory Interface() {
     return _instance;
   }
 
   Interface._internal() {
-    ServerSocket.bind(InternetAddress.anyIPv4, port)
-        .then((ServerSocket server) {
-      server.listen((Socket client) {
-        if (kDebugMode) {
-          print("Set new connection socket");
-        }
-        socket = client;
-        socket?.listen(handleMessage);
-      }, onDone: () {
-        socket = null;
-        batteryCharge = 0;
-        points = [];
-        imuValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        if (kDebugMode) {
-          print("Connection closed by robot");
-        }
-      }, onError: (error) {
-        socket = null;
-        batteryCharge = 0;
-        points = [];
-        imuValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        if (kDebugMode) {
-          print("Connection closed by robot");
-        }
-      });
-    });
+    ServerSocket.bind(InternetAddress.anyIPv4, port).then(
+      (ServerSocket server) {
+        server.listen(
+          (Socket client) {
+            if (kDebugMode) {
+              print("Set new connection socket");
+            }
+
+            socket = client;
+            isConnected = true;
+            sendConnectionStatus();
+
+            lastMsgTime = DateTime.now();
+
+            connectionTimer = getConnectionTimer();
+
+            socket?.setRawOption(
+              RawSocketOption.fromBool(
+                /* SOL_SOCKET */
+                0x1,
+                /* SO_KEEPALIVE */ 0x0009,
+                true,
+              ),
+            );
+
+            socket?.timeout(
+              const Duration(seconds: 1),
+              onTimeout: (_) {
+                if (kDebugMode) {
+                  print("Timeout triggered");
+                }
+                socket?.close();
+                socketLostActions();
+              },
+            );
+
+            socket?.listen(
+              handleMessage,
+              onDone: () {
+                socketLostActions();
+                if (kDebugMode) {
+                  print("Connection closed by robot");
+                }
+              },
+              onError: (error) {
+                socketLostActions();
+                if (kDebugMode) {
+                  print("Error on connection");
+                }
+              },
+              cancelOnError: true,
+            );
+          },
+        );
+      },
+    );
   }
 
   void handleMessage(Uint8List message) {
+    connectionTimer.cancel();
+    connectionTimer = getConnectionTimer();
+
+    isConnected = true;
+    sendConnectionStatus();
+
     // message is composed of 1/2 Byte(s) representing the battery charge as an int
     // then a list of groups of 4 bytes, each representing one coordinate of a point
     // Thus message[0] is the battery charge. Then, message[1:5] is the x coordinate
@@ -173,7 +217,7 @@ class Interface {
     if (kDebugMode) {
       print("Sent autoMode $autoMode");
     }
-    socket?.add(message);
+    sendByte(message);
   }
 
   void sendFan(bool fanMode) {
@@ -189,7 +233,7 @@ class Interface {
     if (kDebugMode) {
       print("Sent fanMode $fanMode");
     }
-    socket?.add(message);
+    sendByte(message);
   }
 
   void sendMovement(int direction, bool start) {
@@ -204,7 +248,7 @@ class Interface {
     if (kDebugMode) {
       print("Sent movement $direction $start");
     }
-    socket?.add(message);
+    sendByte(message);
   }
 
   void sendTestRoutine() {
@@ -216,6 +260,41 @@ class Interface {
     if (kDebugMode) {
       print("Initiated test routine");
     }
-    socket?.add(message);
+    sendByte(message);
+  }
+
+  void sendByte(Uint8List msg) {
+    if (socket != null) {
+      socket?.add(msg);
+    } else {
+      if (kDebugMode) {
+        print("Socket disconnected");
+      }
+    }
+  }
+
+  Timer getConnectionTimer() {
+    return Timer(
+      const Duration(seconds: 3),
+      () {
+        if (kDebugMode) {
+          print("Timeout triggered");
+        }
+        socket?.close();
+        socketLostActions();
+      },
+    );
+  }
+
+  void socketLostActions() {
+    socket = null;
+    isConnected = false;
+    sendConnectionStatus();
+    imuValues = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+    sendImuValues();
+    connectionTimer.cancel();
+    if (kDebugMode) {
+      print("Connection lsot actions");
+    }
   }
 }

@@ -11,8 +11,8 @@ class ControlPanel extends StatefulWidget {
 }
 
 class ControlPanelState extends State<ControlPanel> {
-  bool isAutoMode = true;
-  bool isFanOn = true;
+  bool isAutoMode = false;
+  bool isFanOn = false;
 
   final Interface _interface = Interface();
 

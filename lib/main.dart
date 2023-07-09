@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app/comms/interface.dart';
 import 'package:app/utils/app_scroll_behavior.dart';
 import 'package:app/view/battery_monitor.dart';
+import 'package:app/view/connection_indicator.dart';
 import 'package:app/view/control_buttons.dart';
 import 'package:app/view/imu_monitor.dart';
 import 'package:app/view/log_view.dart';
@@ -76,6 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
         actions: const [
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: ConnectionIndicator(),
+          ),
           Padding(
             padding: EdgeInsets.all(8.0),
             child: BatteryMonitor(),
